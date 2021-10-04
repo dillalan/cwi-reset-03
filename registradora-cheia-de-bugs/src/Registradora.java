@@ -26,12 +26,10 @@ public class Registradora {
                     System.out.println("Pão: "+ItensPorQuantidade.getPao());
                     System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
                     System.out.println("Torta: "+ItensPorQuantidade.getTorta()+"\n -----------");
+                } else {
+                    ReposicaoCozinha.reporItem(item);
                 }
-                ReposicaoCozinha.reporItem(item);
-            }
-
-
-            if ("leite".equals(item) || "cafe".equals(item)) {
+            } else if ("leite".equals(item) || "cafe".equals(item)){
                 ReposicaoFornecedor.reporItem(item);
             }
         }
