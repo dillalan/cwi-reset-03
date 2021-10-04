@@ -4,9 +4,9 @@ public class Registradora {
     public static void main(String[] args) {
         primeiroBug();
 
-//        segundoBug();
+        segundoBug();
 
-//        terceiroBug();
+        terceiroBug();
 //
 //        quartoBug();
 //
@@ -49,6 +49,10 @@ public class Registradora {
     }
 
     private static void segundoBug() {
+        /*
+        A expressão de calculo de precoTotal para o item torta é divisão de inteiros que gera um resultado
+        inteiro de ZERO. Corrigido com a transformação para double.
+         */
         DataProjeto.criarDataComCozinhaEncerradaMasComDiaUtil();
         String item = "torta";
         int quantidade = 10;
