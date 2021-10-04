@@ -2,9 +2,9 @@
 public class Registradora {
 
     public static void main(String[] args) {
-//        primeiroBug();
+        primeiroBug();
 
-        segundoBug();
+//        segundoBug();
 
 //        terceiroBug();
 //
@@ -36,8 +36,8 @@ public class Registradora {
 
     private static void primeiroBug() {
         /*
-        O erro estava na classe RelaçãoPesoPreço, a validação do produto era feito com uma comparação entre duas
-        palavras diferentes (sanduba -> sanduiche), impedindo a multiplicação de item por preço.
+        A string enviada para resgistrarItem é 'sanduiche' e causando falha ao ser comparada com 'sanduba'
+        A desambiguação do termo corrige o defeito(sanduiche==sanduiche)
          */
         DataProjeto.criarDataComCozinhaFuncionando();
         String item = "sanduiche";
