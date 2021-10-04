@@ -7,8 +7,8 @@ public class Registradora {
         segundoBug();
 
         terceiroBug();
-//
-//        quartoBug();
+
+        quartoBug();
 //
 //        quintoBug();
 //
@@ -21,10 +21,15 @@ public class Registradora {
         if (QuantidadeMinimaItem.precisaReposicao(item)) {
             if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
                 if (!DataProjeto.cozinhaEmFuncionamento()) {
-                    System.out.println("Cozinha fechada!");
+                    System.out.println("Cozinha fechada!\n -----------");
+                    System.out.println("Estoque Disponível:");
+                    System.out.println("Pão: "+ItensPorQuantidade.getPao());
+                    System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+                    System.out.println("Torta: "+ItensPorQuantidade.getTorta()+"\n -----------");
                 }
                 ReposicaoCozinha.reporItem(item);
             }
+
 
             if ("leite".equals(item) || "cafe".equals(item)) {
                 ReposicaoFornecedor.reporItem(item);
