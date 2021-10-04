@@ -63,6 +63,10 @@ public class Registradora {
     }
 
     private static void terceiroBug() {
+        /*
+        Diferença de strings para o objeto item de valor 'café. A desambiguação do termo corrige o
+        defeito(cafe==cafe)
+         */
         DataProjeto.criarDataComCozinhaFuncionando();
         String item = "cafe";
         int quantidade = 40;
