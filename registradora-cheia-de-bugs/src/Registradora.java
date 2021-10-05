@@ -2,48 +2,18 @@
 public class Registradora {
 
     public static void main(String[] args) {
-        System.out.println("bug1");
+
+//      Rodar um bug de cada vez!
         primeiroBug();
 
-//        System.out.println("Estoque Disponível:");
-//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
-//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
-//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
-//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
+//        segundoBug();
 
-        System.out.println("bug2");
-        segundoBug();
+//        terceiroBug();
 
-//        System.out.println("Estoque Disponível:");
-//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
-//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
-//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
-//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
-
-        System.out.println("bug3");
-        terceiroBug();
-
-//        System.out.println("Estoque Disponível:");
-//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
-//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
-//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
-//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
-
-        System.out.println("bug4");
 //        quartoBug();
-//
-//        System.out.println("Estoque Disponível:");
-//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
-//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
-//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
-//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
 
 //        quintoBug();
-//
+
 //        sextoBug();
     }
 
