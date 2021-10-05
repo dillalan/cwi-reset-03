@@ -2,14 +2,46 @@
 public class Registradora {
 
     public static void main(String[] args) {
+        System.out.println("bug1");
         primeiroBug();
 
+//        System.out.println("Estoque Disponível:");
+//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
+//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
+//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
+//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
+
+        System.out.println("bug2");
         segundoBug();
 
+//        System.out.println("Estoque Disponível:");
+//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
+//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
+//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
+//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
+
+        System.out.println("bug3");
         terceiroBug();
 
-        quartoBug();
+//        System.out.println("Estoque Disponível:");
+//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
+//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
+//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
+//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
+
+        System.out.println("bug4");
+//        quartoBug();
 //
+//        System.out.println("Estoque Disponível:");
+//        System.out.println("Pão: "+ItensPorQuantidade.getPao());
+//        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+//        System.out.println("Torta: "+ItensPorQuantidade.getTorta());
+//        System.out.println("Café: "+ItensPorQuantidade.getCafe());
+//        System.out.println("Leite: "+ItensPorQuantidade.getLeite()+"\n -----------");
+
 //        quintoBug();
 //
 //        sextoBug();
@@ -17,23 +49,25 @@ public class Registradora {
 
     private static double registrarItem(String item, int quantidade) {
         double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
-
-        if (QuantidadeMinimaItem.precisaReposicao(item)) {
-            if ("pao".equals(item) || "sanduiche".equals(item) || "torta".equals(item)) {
-                if (!DataProjeto.cozinhaEmFuncionamento()) {
-                    System.out.println("Cozinha fechada!\n -----------");
-                    System.out.println("Estoque Disponível:");
-                    System.out.println("Pão: "+ItensPorQuantidade.getPao());
-                    System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-                    System.out.println("Torta: "+ItensPorQuantidade.getTorta()+"\n -----------");
-                } else {
-                    ReposicaoCozinha.reporItem(item);
+        String[] itens = {"pao", "sanduiche", "torta", "leite", "cafe"};
+        for (String produto:
+             itens) {
+            if (QuantidadeMinimaItem.precisaReposicao(produto)) {
+                if ("pao".equals(produto) || "sanduiche".equals(produto) || "torta".equals(produto)) {
+                    if (!DataProjeto.cozinhaEmFuncionamento()) {
+                        System.out.println("Cozinha fechada!\n -----------");
+                        System.out.println("Estoque Disponível:");
+                        System.out.println("Pão: "+ItensPorQuantidade.getPao());
+                        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
+                        System.out.println("Torta: "+ItensPorQuantidade.getTorta()+"\n -----------");
+                    } else {
+                        ReposicaoCozinha.reporItem(produto);
+                    }
+                } else if ("leite".equals(produto) || "cafe".equals(produto)){
+                    ReposicaoFornecedor.reporItem(produto);
                 }
-            } else if ("leite".equals(item) || "cafe".equals(item)){
-                ReposicaoFornecedor.reporItem(item);
             }
         }
-
         return precoItem;
     }
 
