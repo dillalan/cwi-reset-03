@@ -18,18 +18,24 @@ public class Registradora {
     }
 
     private static double registrarItem(String item, int quantidade) {
-        double precoItem = RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
+        confereEstoque();
+        return RelacaoPesoPreco.retornaPrecoProduto(item, quantidade);
+    }
+
+    public static void confereEstoque(){
         String[] itens = {"pao", "sanduiche", "torta", "leite", "cafe"};
         for (String produto:
-             itens) {
+                itens) {
             if (QuantidadeMinimaItem.precisaReposicao(produto)) {
                 if ("pao".equals(produto) || "sanduiche".equals(produto) || "torta".equals(produto)) {
                     if (!DataProjeto.cozinhaEmFuncionamento()) {
                         System.out.println("Cozinha fechada!\n -----------");
                         System.out.println("Estoque Disponível:");
-                        System.out.println("Pão: "+ItensPorQuantidade.getPao());
-                        System.out.println("Sanduíche: "+ItensPorQuantidade.getSanduiche());
-                        System.out.println("Torta: "+ItensPorQuantidade.getTorta()+"\n -----------");
+                        System.out.println("Pão: "+ItensPorQuantidade.getPao()+" gramas --> "+
+                                ItensPorQuantidade.getPao()/60+" unidades");
+                        System.out.println("Sanduíches: "+ItensPorQuantidade.getSanduiche()+" unidades");
+                        System.out.println("Tortas: "+ItensPorQuantidade.getTorta()+" unidades --> "+
+                                ItensPorQuantidade.getTorta()*16+" fatias"+"\n -----------");
                     } else {
                         ReposicaoCozinha.reporItem(produto);
                     }
@@ -38,7 +44,6 @@ public class Registradora {
                 }
             }
         }
-        return precoItem;
     }
 
     private static void primeiroBug() {
