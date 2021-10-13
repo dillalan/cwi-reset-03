@@ -3,7 +3,7 @@ package br.com.cwi.reset.alandill;
 import java.time.LocalDate;
 
 public class Artista {
-    private Integer id;
+    private Integer id = 0;
     private String nome;
     private LocalDate dataNascimento;
     private Integer anoInicioAtividade;
@@ -31,8 +31,7 @@ public class Artista {
         return anoInicioAtividade;
     }
 
-    public Integer setId(){
+    public Integer setId() {
         return this.id += 1;
     }
-
 }
