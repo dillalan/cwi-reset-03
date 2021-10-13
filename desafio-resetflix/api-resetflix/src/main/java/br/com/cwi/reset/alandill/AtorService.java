@@ -73,5 +73,7 @@ public class AtorService {
 
     public List<Ator> consultarAtores(){
         return this.fakeDatabase.recuperaAtores();
+        //TODO Exceção: Nenhum ator cadastrado -> retornar a mensagem de erro: "Nenhum ator cadastrado, favor cadastrar
+        // atores."
     }
 }
