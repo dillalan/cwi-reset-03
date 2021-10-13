@@ -1,7 +1,9 @@
 package br.com.cwi.reset.alandill;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AtorService {
     private FakeDatabase fakeDatabase;
@@ -35,40 +37,61 @@ public class AtorService {
         // nome {nome}."
     }
 
-    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome){
-        filtroNome = (filtroNome!=null ? filtroNome:""); // Se filtro nome for diferente nulo, filtroNome recebe o parâmetro.
+
+    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NaoEncontradoException{
         List<AtorEmAtividade> emAtividade = new ArrayList<>();
+        String stringDoFiltro = filtroNome.toLowerCase();
+        String stringDaDatabase;
+
         for (Ator ator:
              this.fakeDatabase.recuperaAtores()) {
+            stringDaDatabase = ator.getNome().toLowerCase();
+            if (stringDaDatabase.contains(stringDoFiltro)){
+                if (ator.getStatusCarreira()==StatusCarreira.EM_ATIVIDADE){
+                    emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(),
+                            ator.getAnoInicioAtividade()));
+                }
+            }
+            else {
+                throw new NaoEncontradoException("Ator não encontrado com o filtro {"+filtroNome+"}, favor informar outro filtro.");
+            }
+        }
+        return emAtividade;
+    }
+
+    public List<AtorEmAtividade> listarAtoresEmAtividade() throws SemCadastroException{
+        if (this.fakeDatabase.recuperaAtores().isEmpty()){
+            throw new SemCadastroException("Nenhum ator cadastrado, favor cadastrar atores.");
+        }
+        List<AtorEmAtividade> emAtividade = new ArrayList<>();
+        for (Ator ator:
+                this.fakeDatabase.recuperaAtores()) {
             if (ator.getStatusCarreira()==StatusCarreira.EM_ATIVIDADE){
                 emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(), ator.getAnoInicioAtividade()));
             }
         }
         return emAtividade;
 
-        //TODO Campo filtroNome é opcional, quando informado deve filtrar por qualquer match na sequência do nome.
-
         //TODO Exceção: Sem atores cadastrados -> retornar a mensagem de erro: "Nenhum ator cadastrado, favor cadastrar
         // atores."
-
-        //TODO Exceção: Sem resultados para filtroNome -> retornar a mensagem de erro: "Ator não encontrato com o
-        // filtro {filtro}, favor informar outro filtro."
     }
 
-    public void consultarAtor(Integer id){
+    public Ator consultarAtor(Integer id) throws NaoEncontradoException {
+
+        Ator atorConsultado = new Ator("", LocalDate.of(2019,11,5), StatusCarreira.EM_ATIVIDADE, 2022);
         for (Ator ator :
                 this.fakeDatabase.recuperaAtores()) {
             if (ator.getId()==id){
-                imprimePerfil(ator);
-                break;
+                atorConsultado = ator;
+            } else{
+                throw new NaoEncontradoException("Nenhum ator encontrado com o parâmetro id={"+id+"}, favor " +
+                        "verifique os parâmetros informados.");
             }
         }
+        return atorConsultado;
 
         //TODO Exceção: Campo id obrigatório -> retorna mensagem de erro: "Campo obrigatório não informado. Favor
         // informar o campo {campo}."
-
-        //TODO Exceção: Ator não encontrado -> retornar a mensagem de erro: "Nenhum ator encontrado com o parâmetro
-        // id={campo}, favor verifique os parâmetros informados."
     }
 
     public List<Ator> consultarAtores(){
