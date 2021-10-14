@@ -6,9 +6,18 @@ import java.util.List;
 
 public class AtorService {
     private FakeDatabase fakeDatabase;
+    private Integer incremento = 1;
 
     public AtorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+    }
+
+    public Integer getIncremento() {
+        return incremento;
+    }
+
+    public void setIncremento() {
+        this.incremento += 1;
     }
 
     public void imprimePerfil(Ator ator){
@@ -19,7 +28,6 @@ public class AtorService {
     }
 
     public void criarAtor(AtorRequest atorRequest) throws NomeException, TemporalException{
-
         if (!atorRequest.getNome().contains(" ")){
             throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o ator.");
         } else if (atorRequest.getDataNascimento().isAfter(LocalDate.from(LocalDate.now()))){
@@ -33,7 +41,9 @@ public class AtorService {
                 throw new NomeException("Já existe um ator cadastrado para o nome {"+atorRequest.getNome()+"}");
             }
         }
+        atorRequest.setId(getIncremento());
         fakeDatabase.persisteAtor(atorRequest);
+        setIncremento();
     }
 
     public void criarAtor() throws ObrigatorioException{

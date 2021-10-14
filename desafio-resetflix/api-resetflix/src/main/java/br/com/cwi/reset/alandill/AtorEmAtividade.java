@@ -3,12 +3,19 @@ package br.com.cwi.reset.alandill;
 import java.time.LocalDate;
 
 public class AtorEmAtividade extends Artista {
-    private Integer id=0;
+    private Integer incremento = 1;
 
     public AtorEmAtividade(String nome, LocalDate dataNascimento, Integer anoInicioAtividade) {
         super(nome, dataNascimento, anoInicioAtividade);
-        this.id = setId();
+        setId(getIncremento());
+        setIncremento();
     }
 
+    public Integer getIncremento() {
+        return incremento;
+    }
 
+    public void setIncremento() {
+        this.incremento += 1;
+    }
 }

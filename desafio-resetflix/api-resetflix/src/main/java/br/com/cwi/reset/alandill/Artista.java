@@ -9,7 +9,6 @@ public class Artista {
     private Integer anoInicioAtividade;
 
     public Artista(String nome, LocalDate dataNascimento, Integer anoInicioAtividade) {
-        this.id = setId();
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.anoInicioAtividade = anoInicioAtividade;
@@ -31,7 +30,7 @@ public class Artista {
         return anoInicioAtividade;
     }
 
-    public Integer setId() {
-        return this.id += 1;
+    public Integer setId(Integer incremento) {
+        return this.id += incremento;
     }
 }
