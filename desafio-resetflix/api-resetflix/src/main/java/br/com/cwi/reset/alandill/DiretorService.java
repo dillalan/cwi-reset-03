@@ -16,23 +16,25 @@ public class DiretorService {
         System.out.println("Ano de início de atividade: "+diretor.getAnoInicioAtividade());
     }
 
-    public void cadastrarDiretor(DiretorRequest diretorRequest){
+    public void cadastrarDiretor(DiretorRequest diretorRequest) throws NomeException, TemporalException {
+        if (!diretorRequest.getNome().contains(" ")){
+            throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o diretor.");
+        } else if (diretorRequest.getDataNascimento().isAfter(LocalDate.now())){
+            throw new TemporalException("Não é possível cadastrar diretores não nascidos.");
+        } else if (diretorRequest.getAnoInicioAtividade()<diretorRequest.getDataNascimento().getYear()){
+            throw new TemporalException("Ano de início de atividade inválido para o diretor cadastrado.");
+        }
+        for (Diretor diretor :
+                this.fakeDatabase.recuperaDiretores()) {
+            if (diretor.getNome().equals(diretorRequest.getNome())){
+                throw new NomeException("á existe um diretor cadastrado para o nome {"+diretorRequest.getNome()+"}.");
+            }
+        }
         this.fakeDatabase.persisteDiretor(diretorRequest);
+    }
 
-        //TODO Exceção: Campo obrigatório faltando -> Incluir mensagem de erro: "Campo obrigatório não informado. Favor
-        // informar o campo {campo}."
-
-        //TODO Exceção: Campo nome deve assegurar nome e sobrenome -> Incluir mensagem de erro: "Deve ser informado no
-        // mínimo nome e sobrenome para o diretor."
-
-        //TODO Exceção: Campo dataNascimento maior que data atual -> Incluir mensagem de erro: "Não é possível cadastrar
-        // diretores não nascidos."
-
-        //TODO Exceção: Campo anoInicioAtividade anterior ao nascimento -> Incluir mensagem de erro: "Ano de início de
-        // atividade inválido para o diretor cadastrado."
-
-        //TODO Exceção: Dois atores de mesmo nome -> Incluir mensagem de erro: "Já existe um diretor cadastrado para o
-        // nome {nome}."
+    public void cadastrarDiretor() throws ObrigatorioException {
+        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {DiretorRequest diretorRequest}.");
     }
 
     public List<Diretor> listarDiretores(String filtroNome){
