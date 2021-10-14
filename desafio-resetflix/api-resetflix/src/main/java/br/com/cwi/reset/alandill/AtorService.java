@@ -20,7 +20,7 @@ public class AtorService {
 
     public void criarAtor(AtorRequest atorRequest) throws NomeException, TemporalException{
 
-        if (atorRequest.getNome().contains(" ")){
+        if (!atorRequest.getNome().contains(" ")){
             throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o ator.");
         } else if (atorRequest.getDataNascimento().isAfter(LocalDate.from(LocalDate.now()))){
             throw new TemporalException("Não é possível cadastrar atores não nascidos.");
