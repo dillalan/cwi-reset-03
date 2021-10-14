@@ -80,9 +80,10 @@ public class DiretorService {
                 throw new NaoEncontradoException("Nenhum diretor encontrado com o parâmetro id={"+id+"}, favor verifique os parâmetros informados.");
             }
         }
-        //TODO Exceção: Campo id obrigatório -> retorna mensagem de erro: "Campo obrigatório não informado. Favor
-        // informar o campo {campo}."
     return diretorConsultado;
     }
 
+    public Diretor consultarDiretor() throws ObrigatorioException {
+        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
+    }
 }
