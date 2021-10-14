@@ -3,7 +3,6 @@ package br.com.cwi.reset.alandill;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class AtorService {
     private FakeDatabase fakeDatabase;
@@ -19,22 +18,27 @@ public class AtorService {
         System.out.println("Status da Carreira: "+ator.getStatusCarreira());
     }
 
-    public void criarAtor(AtorRequest atorRequest) {
+    public void criarAtor(AtorRequest atorRequest) throws NomeException, TemporalException{
+
+        if (atorRequest.getNome().contains(" ")){
+            throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o ator.");
+        } else if (atorRequest.getDataNascimento().isAfter(LocalDate.from(LocalDate.now()))){
+            throw new TemporalException("Não é possível cadastrar atores não nascidos.");
+        } else if (atorRequest.getAnoInicioAtividade()<atorRequest.getDataNascimento().getYear()){
+            throw new TemporalException("Ano de início de atividade inválido para o ator cadastrado.");
+        }
+        for (Ator ator:
+                fakeDatabase.recuperaAtores()) {
+            if (ator.getNome().equals(atorRequest.getNome())){
+                throw new NomeException("á existe um ator cadastrado para o nome {"+atorRequest.getNome()+"}");
+            }
+        }
         fakeDatabase.persisteAtor(atorRequest);
-        //TODO Exceção: Campo obrigatório faltando -> Incluir mensagem de erro: "Campo obrigatório não informado. Favor
-        // informar o campo {campo}."
+    }
 
-        //TODO Exceção: Campo nome deve assegurar nome e sobrenome -> Incluir mensagem de erro: "Deve ser informado no
-        // mínimo nome e sobrenome para o ator."
-
-        //TODO Exceção: Campo dataNascimento maior que data atual -> Incluir mensagem de erro: "Não é possível cadastrar
-        // atores não nascidos."
-
-        //TODO Exceção: Campo anoInicioAtividade anterior ao nascimento -> Incluir mensagem de erro: "Ano de início de
-        // atividade inválido para o ator cadastrado."
-
-        //TODO Exceção: Dois atores de mesmo nome -> Incluir mensagem de erro: "Já existe um ator cadastrado para o
-        // nome {nome}."
+    public void criarAtor() throws ObrigatorioException{
+        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o " +
+                "campo {AtorRequest atorRequest}.");
     }
 
 
@@ -71,9 +75,6 @@ public class AtorService {
             }
         }
         return emAtividade;
-
-        //TODO Exceção: Sem atores cadastrados -> retornar a mensagem de erro: "Nenhum ator cadastrado, favor cadastrar
-        // atores."
     }
 
     public Ator consultarAtor(Integer id) throws NaoEncontradoException {
@@ -89,14 +90,16 @@ public class AtorService {
             }
         }
         return atorConsultado;
-
-        //TODO Exceção: Campo id obrigatório -> retorna mensagem de erro: "Campo obrigatório não informado. Favor
-        // informar o campo {campo}."
     }
 
-    public List<Ator> consultarAtores(){
+    public Ator consultarAtor() throws ObrigatorioException{
+        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
+    }
+
+    public List<Ator> consultarAtores() throws SemCadastroException{
+        if (this.fakeDatabase.recuperaAtores().isEmpty()){
+            throw new SemCadastroException("Nenhum ator cadastrado, favor cadastrar atores.");
+        }
         return this.fakeDatabase.recuperaAtores();
-        //TODO Exceção: Nenhum ator cadastrado -> retornar a mensagem de erro: "Nenhum ator cadastrado, favor cadastrar
-        // atores."
     }
 }
