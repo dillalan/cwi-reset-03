@@ -90,16 +90,19 @@ public class AtorService {
     }
 
     public Ator consultarAtor(Integer id) throws NaoEncontradoException {
-
+        boolean flag = false;
         Ator atorConsultado = new Ator("", LocalDate.of(2019,11,5), StatusCarreira.EM_ATIVIDADE, 2022);
         for (Ator ator :
                 this.fakeDatabase.recuperaAtores()) {
             if (ator.getId()==id){
                 atorConsultado = ator;
-            } else{
-                throw new NaoEncontradoException("Nenhum ator encontrado com o parâmetro id={"+id+"}, favor " +
-                        "verifique os parâmetros informados.");
+                flag = true;
+                break;
             }
+        }
+        if (!flag){
+            throw new NaoEncontradoException("Nenhum ator encontrado com o parâmetro id={"+id+"}, favor " +
+                    "verifique os parâmetros informados.");
         }
         return atorConsultado;
     }
