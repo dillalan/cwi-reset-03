@@ -6,9 +6,17 @@ import java.util.List;
 
 public class DiretorService {
     private FakeDatabase fakeDatabase;
-
+    private Integer incremento = 1;
     public DiretorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+    }
+
+    public Integer getIncremento() {
+        return incremento;
+    }
+
+    public void setIncremento() {
+        this.incremento += 1;
     }
 
     public void imprimePerfil(Diretor diretor){
@@ -28,10 +36,12 @@ public class DiretorService {
         for (Diretor diretor :
                 this.fakeDatabase.recuperaDiretores()) {
             if (diretor.getNome().equals(diretorRequest.getNome())){
-                throw new NomeException("á existe um diretor cadastrado para o nome {"+diretorRequest.getNome()+"}.");
+                throw new NomeException("Já existe um diretor cadastrado para o nome {"+diretorRequest.getNome()+"}.");
             }
         }
+        diretorRequest.setId(getIncremento());
         this.fakeDatabase.persisteDiretor(diretorRequest);
+        setIncremento();
     }
 
     public void cadastrarDiretor() throws ObrigatorioException {
@@ -71,14 +81,18 @@ public class DiretorService {
 
     public Diretor consultarDiretor(Integer id) throws NaoEncontradoException {
         Diretor diretorConsultado = new Diretor("", LocalDate.of(2019,11,5), 2019);
+        boolean flag = false;
+
         for (Diretor diretor :
                 this.fakeDatabase.recuperaDiretores()) {
-            if (diretor.getId()==id){
+            if (diretor.getId() == id) {
                 diretorConsultado = diretor;
+                flag = true;
+                break;
             }
-            else {
-                throw new NaoEncontradoException("Nenhum diretor encontrado com o parâmetro id={"+id+"}, favor verifique os parâmetros informados.");
-            }
+        }
+        if (!flag){
+            throw new NaoEncontradoException("Nenhum diretor encontrado com o parâmetro id={"+id+"}, favor verifique os parâmetros informados.");
         }
     return diretorConsultado;
     }
