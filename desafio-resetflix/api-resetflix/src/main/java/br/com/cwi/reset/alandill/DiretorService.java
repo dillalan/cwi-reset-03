@@ -1,6 +1,7 @@
 package br.com.cwi.reset.alandill;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiretorService {
@@ -37,17 +38,36 @@ public class DiretorService {
         throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {DiretorRequest diretorRequest}.");
     }
 
-    public List<Diretor> listarDiretores(String filtroNome){
-        return this.fakeDatabase.recuperaDiretores();
-
-        //TODO Campo filtroNome é opcional, quando informado deve filtrar por qualquer match na sequência do nome.
-
-        //TODO Exceção: Sem diretores cadastrados -> retornar a mensagem de erro: "Nenhum diretor cadastrado, favor
-        // cadastrar diretores."
-
-        //TODO Exceção: Sem match no filtro -> retornar a mensagem de erro: "Diretor não encontrado com o filtro
-        // {filtro}, favor informar outro filtro."
+    public List<Diretor> listarDiretores(String filtroNome) throws SemCadastroException, NaoEncontradoException {
+        if (this.fakeDatabase.recuperaDiretores().isEmpty()) {
+            throw new SemCadastroException("Nenhum diretor cadastrado, favor cadastrar diretores.");
+        }
+        List <Diretor> diretorFiltrado = new ArrayList<>();
+        String stringDoFiltro = filtroNome.toLowerCase();
+        String stringDaDatabase;
+        boolean flag = false;
+        for (Diretor diretor:
+             this.fakeDatabase.recuperaDiretores()) {
+            stringDaDatabase = diretor.getNome().toLowerCase();
+            if (stringDaDatabase.contains(stringDoFiltro)){
+                diretorFiltrado.add(diretor);
+                flag = true;
+            }
+        }
+        if(!flag){
+            throw new NaoEncontradoException("Diretor não encontrado com o filtro {"+filtroNome+"}, favor informar " +
+                    "outro filtro.");
+        }
+        return diretorFiltrado;
     }
+
+    public List<Diretor> listarDiretores() throws SemCadastroException {
+        if (this.fakeDatabase.recuperaDiretores().isEmpty()) {
+            throw new SemCadastroException("Nenhum diretor cadastrado, favor cadastrar diretores.");
+        }
+        return this.fakeDatabase.recuperaDiretores();
+    }
+
 
     public Diretor consultarDiretor(Integer id) throws NaoEncontradoException {
         Diretor diretorConsultado = new Diretor("", LocalDate.of(2019,11,5), 2019);
