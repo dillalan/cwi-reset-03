@@ -30,7 +30,7 @@ public class AtorService {
         for (Ator ator:
                 fakeDatabase.recuperaAtores()) {
             if (ator.getNome().equals(atorRequest.getNome())){
-                throw new NomeException("á existe um ator cadastrado para o nome {"+atorRequest.getNome()+"}");
+                throw new NomeException("Já existe um ator cadastrado para o nome {"+atorRequest.getNome()+"}");
             }
         }
         fakeDatabase.persisteAtor(atorRequest);
@@ -46,7 +46,7 @@ public class AtorService {
         List<AtorEmAtividade> emAtividade = new ArrayList<>();
         String stringDoFiltro = filtroNome.toLowerCase();
         String stringDaDatabase;
-
+        boolean flag = false;
         for (Ator ator:
              this.fakeDatabase.recuperaAtores()) {
             stringDaDatabase = ator.getNome().toLowerCase();
@@ -54,11 +54,13 @@ public class AtorService {
                 if (ator.getStatusCarreira()==StatusCarreira.EM_ATIVIDADE){
                     emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(),
                             ator.getAnoInicioAtividade()));
+                    flag = true;
                 }
             }
-            else {
-                throw new NaoEncontradoException("Ator não encontrado com o filtro {"+filtroNome+"}, favor informar outro filtro.");
-            }
+        }
+        if (!flag){
+            throw new NaoEncontradoException("Ator não encontrado com o filtro {"+filtroNome+"}, favor informar " +
+                    "outro filtro.");
         }
         return emAtividade;
     }
