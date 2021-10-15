@@ -1,8 +1,16 @@
-public class Aplicacao {
-    public static void main(String[] args) {
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
-        Diretor diretor1 = new Diretor("James Cameron", 67, 14);
-        Diretor diretor2 = new Diretor("Tim Burton", 63, 22);
+public class Aplicacao {
+    public static void main(String[] args) throws AvaliacaoForaDoPadraoException {
+
+        Diretor diretor1 = new Diretor("James Cameron", LocalDate.of(1954, Month.AUGUST, 16), 14, Genero.MASCULINO);
+        Diretor diretor2 = new Diretor("Tim Burton", LocalDate.of(1958, Month.AUGUST, 25), 22, Genero.MASCULINO);
+
+        Ator ator1 = new Ator("Jodie Foster", LocalDate.of(1962, Month.NOVEMBER, 19), 2, Genero.FEMININO);
+        Ator ator2 = new Ator("Elliot Page", LocalDate.of(1987, Month.FEBRUARY, 21),0, Genero.NAO_BINARIO);
 
         Filme filme1 = new Filme(
                 "Titanic",
@@ -25,8 +33,34 @@ public class Aplicacao {
                 4.8,
                 diretor2);
 
-        filme1.reproduzir();
-        filme2.reproduzir();
+        // Testa as classes criadas
+        List<Diretor> diretores = new ArrayList<Diretor>();
 
+        diretores.add(diretor1);
+        diretores.add(diretor2);
+
+        List<Ator> atores = new ArrayList<Ator>();
+
+        atores.add(ator1);
+        atores.add(ator2);
+
+        List <Filme> filmes = new ArrayList<Filme>();
+        filmes.add(filme1);
+        filmes.add(filme2);
+
+        for (Diretor diretor:
+             diretores) {
+            diretor.perfil();
+        }
+
+        for (Ator ator:
+             atores) {
+            ator.perfil();
+        }
+
+        for (Filme filme:
+             filmes) {
+            filme.reproduzir();
+        }
     }
 }
