@@ -31,7 +31,7 @@ public class DiretorService {
     }
 
     public void cadastrarDiretor(DiretorRequest diretorRequest) throws NomeException, TemporalException {
-        if (!diretorRequest.getNome().contains(" ")){
+        if (diretorRequest.getNome().split(" ").length<2){
             throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o diretor.");
         } else if (diretorRequest.getDataNascimento().isAfter(LocalDate.now())){
             throw new TemporalException("Não é possível cadastrar diretores não nascidos.");
@@ -84,10 +84,13 @@ public class DiretorService {
     }
 
 
-    public Diretor consultarDiretor(Integer id) throws NaoEncontradoException {
+    public Diretor consultarDiretor(Integer id) throws NaoEncontradoException, ObrigatorioException {
         Diretor diretorConsultado = new Diretor("", LocalDate.of(2019,11,5), 2019);
         boolean flag = false;
 
+        if (id==null){
+            throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
+        }
         for (Diretor diretor :
                 this.fakeDatabase.recuperaDiretores()) {
             if (diretor.getId() == id) {
@@ -100,9 +103,5 @@ public class DiretorService {
             throw new NaoEncontradoException("Nenhum diretor encontrado com o parâmetro id={"+id+"}, favor verifique os parâmetros informados.");
         }
     return diretorConsultado;
-    }
-
-    public Diretor consultarDiretor() throws ObrigatorioException {
-        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
     }
 }

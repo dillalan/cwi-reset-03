@@ -12,6 +12,7 @@ public class Filme {
     private Diretor diretor;
     private List<PersonagemAtor> personagens;
     private String resumo;
+    private Estudio estudio;
 
     public Filme(Integer id, String nome, LocalDate anoLancamento, String capaFilme, List<Genero> generos,
                  Diretor diretor, List<PersonagemAtor> personagens, String resumo) {

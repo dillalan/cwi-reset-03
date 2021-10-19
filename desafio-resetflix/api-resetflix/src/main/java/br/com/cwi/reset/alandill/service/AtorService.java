@@ -34,8 +34,12 @@ public class AtorService {
         System.out.println("Status da Carreira: "+ator.getStatusCarreira());
     }
 
-    public void criarAtor(AtorRequest atorRequest) throws NomeException, TemporalException {
-        if (!atorRequest.getNome().contains(" ")){
+    public void criarAtor(AtorRequest atorRequest) throws NomeException, TemporalException, ObrigatorioException {
+        if (atorRequest.getNome().isEmpty()){
+            throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o " +
+                    "campo {AtorRequest atorRequest}.");
+        }
+        else if(atorRequest.getNome().split(" ").length<2){
             throw new NomeException("Deve ser informado no mínimo nome e sobrenome para o ator.");
         } else if (atorRequest.getDataNascimento().isAfter(LocalDate.from(LocalDate.now()))){
             throw new TemporalException("Não é possível cadastrar atores não nascidos.");
@@ -53,51 +57,46 @@ public class AtorService {
         setIncremento();
     }
 
-    public void criarAtor() throws ObrigatorioException {
-        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o " +
-                "campo {AtorRequest atorRequest}.");
-    }
-
-
-    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NaoEncontradoException {
+    public List<AtorEmAtividade> listarAtoresEmAtividade(String filtroNome) throws NaoEncontradoException, SemCadastroException {
         List<AtorEmAtividade> emAtividade = new ArrayList<>();
         String stringDoFiltro = filtroNome.toLowerCase();
         String stringDaDatabase;
         boolean flag = false;
-        for (Ator ator:
-             this.fakeDatabase.recuperaAtores()) {
-            stringDaDatabase = ator.getNome().toLowerCase();
-            if (stringDaDatabase.contains(stringDoFiltro)){
-                if (ator.getStatusCarreira()== StatusCarreira.EM_ATIVIDADE){
-                    emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(),
-                            ator.getAnoInicioAtividade()));
-                    flag = true;
-                }
-            }
-        }
-        if (!flag){
-            throw new NaoEncontradoException("Ator não encontrado com o filtro {"+filtroNome+"}, favor informar " +
-                    "outro filtro.");
-        }
-        return emAtividade;
-    }
-
-    public List<AtorEmAtividade> listarAtoresEmAtividade() throws SemCadastroException {
         if (this.fakeDatabase.recuperaAtores().isEmpty()){
             throw new SemCadastroException("Nenhum ator cadastrado, favor cadastrar atores.");
         }
-        List<AtorEmAtividade> emAtividade = new ArrayList<>();
-        for (Ator ator:
-                this.fakeDatabase.recuperaAtores()) {
-            if (ator.getStatusCarreira()==StatusCarreira.EM_ATIVIDADE){
-                emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(), ator.getAnoInicioAtividade()));
+        else if (filtroNome.isEmpty()){
+            for (Ator ator:
+                    this.fakeDatabase.recuperaAtores()) {
+                if (ator.getStatusCarreira()==StatusCarreira.EM_ATIVIDADE){
+                    emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(), ator.getAnoInicioAtividade()));
+                }
+            }
+        } else {
+            for (Ator ator:
+                 this.fakeDatabase.recuperaAtores()) {
+                stringDaDatabase = ator.getNome().toLowerCase();
+                if (stringDaDatabase.contains(stringDoFiltro)){
+                    if (ator.getStatusCarreira()== StatusCarreira.EM_ATIVIDADE){
+                        emAtividade.add(new AtorEmAtividade(ator.getNome(), ator.getDataNascimento(),
+                                ator.getAnoInicioAtividade()));
+                        flag = true;
+                    }
+                }
+            }
+            if (!flag){
+                throw new NaoEncontradoException("Ator não encontrado com o filtro {"+filtroNome+"}, favor informar " +
+                        "outro filtro.");
             }
         }
         return emAtividade;
     }
 
-    public Ator consultarAtor(Integer id) throws NaoEncontradoException {
+    public Ator consultarAtor(Integer id) throws NaoEncontradoException, ObrigatorioException {
         boolean flag = false;
+        if (id == null){
+            throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
+        }
         Ator atorConsultado = new Ator("", LocalDate.of(2019,11,5), StatusCarreira.EM_ATIVIDADE, 2022);
         for (Ator ator :
                 this.fakeDatabase.recuperaAtores()) {
@@ -112,10 +111,6 @@ public class AtorService {
                     "verifique os parâmetros informados.");
         }
         return atorConsultado;
-    }
-
-    public Ator consultarAtor() throws ObrigatorioException{
-        throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
     }
 
     public List<Ator> consultarAtores() throws SemCadastroException{
