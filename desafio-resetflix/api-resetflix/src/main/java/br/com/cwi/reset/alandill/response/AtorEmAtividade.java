@@ -1,0 +1,23 @@
+package br.com.cwi.reset.alandill.response;
+
+import br.com.cwi.reset.alandill.domain.Artista;
+
+import java.time.LocalDate;
+
+public class AtorEmAtividade extends Artista {
+    private Integer incremento = 1;
+
+    public AtorEmAtividade(String nome, LocalDate dataNascimento, Integer anoInicioAtividade) {
+        super(nome, dataNascimento, anoInicioAtividade);
+        setId(getIncremento());
+        setIncremento();
+    }
+
+    public Integer getIncremento() {
+        return incremento;
+    }
+
+    public void setIncremento() {
+        this.incremento += 1;
+    }
+}
