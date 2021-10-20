@@ -1,6 +1,12 @@
 package br.com.cwi.reset.alandill.domain;
 
 public enum TipoAtuacao {
-    PRINCIPAL,
-    COADJUVANTE;
+    PRINCIPAL("Principal"),
+    COADJUVANTE("Coadjuvante");
+
+    private String papel;
+
+    TipoAtuacao(String papel) {
+        this.papel = papel;
+    }
 }
