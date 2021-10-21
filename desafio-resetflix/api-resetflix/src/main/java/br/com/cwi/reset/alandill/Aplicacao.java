@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Aplicacao {
     public static void main(String[] args) throws NaoEncontradoException, SemCadastroException,
             NomeException, TemporalException, ObrigatorioException {
+
         SpringApplication.run(Aplicacao.class, args);
+
     }
 }
