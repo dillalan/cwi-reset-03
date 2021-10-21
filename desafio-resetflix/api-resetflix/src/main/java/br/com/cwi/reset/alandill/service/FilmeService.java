@@ -8,13 +8,14 @@ import br.com.cwi.reset.alandill.exception.ObrigatorioException;
 import br.com.cwi.reset.alandill.request.FilmeRequest;
 import br.com.cwi.reset.alandill.request.PersonagemRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FilmeService {
     private FakeDatabase fakeDatabase;
     private DiretorService diretorService;
     private AtorService atorService;
+
 
     public FilmeService(FakeDatabase fakeDatabase) {
         this.diretorService = new DiretorService(FakeDatabase.getInstance());
@@ -30,17 +31,76 @@ public class FilmeService {
         this.fakeDatabase.persisteFilme(filme);
     }
 
-    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor){
-        List<Filme> filmeConsultado = new ArrayList<>();
+    public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws NaoEncontradoException {
+        List<Filme> filtroTitulo = new ArrayList<>();
+        List<Filme> filtroDiretor = new ArrayList<>();
+        List<Filme> filtroPersonagem = new ArrayList<>();
+        List<Filme> filtroAtor = new ArrayList<>();
+        List<List<Filme>> filmesEncontrados = new ArrayList<>();
+        List<List<Filme>> filmesEncontradosSorted = new ArrayList<>();
+        
+        boolean flag = false;
 
-        // FIltro nulo
+        // Filtrando pelo título do filme
         if(nomeFilme!=null){
             for (Filme filme:
                  this.fakeDatabase.recuperaFilmes()) {
+                if (filme.getNome().contains(nomeFilme)){
+                    filtroTitulo.add(filme);
+                    filmesEncontrados.add(filtroTitulo);
+                    flag = true;
+                }
+            }
 
+        }
+        
+        // Filtrando pelo Diretor
+        if (nomeDiretor!=null){
+            for (Filme filme:
+                    this.fakeDatabase.recuperaFilmes()) {
+                if (filme.getDiretor().getNome().contains(nomeDiretor)){
+                    filtroDiretor.add(filme);
+                    filmesEncontrados.add(filtroDiretor);
+                    flag = true;
+                }
             }
         }
-        return filmeConsultado;
+        
+        // Filtrando por personagem
+        if (nomePersonagem!=null){
+            for (Filme filme :
+                    this.fakeDatabase.recuperaFilmes()) {
+                if (contemPersonagem(filme.getPersonagens(), nomePersonagem)){
+                    filtroPersonagem.add(filme);
+                    filmesEncontrados.add(filtroPersonagem);
+                    flag = true;
+                }
+            }
+        }
+
+        // Filtrando por Ator
+        if (nomeAtor!=null){
+            for (Filme filme:
+                 this.fakeDatabase.recuperaFilmes()) {
+                if (contemAtor(filme.getPersonagens(), nomeAtor)){
+                    filtroAtor.add(filme);
+                    filmesEncontrados.add(filtroAtor);
+                    flag = true;
+                }
+            }
+        }
+
+
+        // Se nenhum filtro encontrou resultado...
+        if(!flag){
+            throw new NaoEncontradoException("Filme não encontrado com os filtros nomeFilme={"+nomeFilme+"}, " +
+                    "nomeDiretor={"+nomeDiretor+"}, nomePersonagem={"+nomePersonagem+"}, nomeAtor={"+nomeAtor+"}, " +
+                    "favor informar outros filtros.");
+        } else{
+            //Se algum filtro retornar resultado, retornamos o resultado mais estrito da combinação de filtros
+            filmesEncontradosSorted = filmesEncontrados.stream().sorted(Comparator.comparingInt(List::size)).collect(Collectors.toList());
+        }
+        return filmesEncontradosSorted.get(0);
     }
 
     private void validaEntrada(FilmeRequest filmeRequest) throws ObrigatorioException, NomeException, NaoEncontradoException {
@@ -106,5 +166,25 @@ public class FilmeService {
                     personagem.getNomePersonagem(), personagem.getDescricaoPersonagem(), personagem.getTipoAtuacao()));
         }
         return personagensListados;
+    }
+
+    private boolean contemPersonagem(List<PersonagemAtor> listaDePersonagens, String essePersonagem){
+        for (PersonagemAtor personagem :
+               listaDePersonagens ) {
+            if (personagem.getNomePersonagem().contains(essePersonagem)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean contemAtor(List<PersonagemAtor> listaDePersonagens, String esseAtor){
+        for (PersonagemAtor personagem :
+                listaDePersonagens) {
+            if (personagem.getAtor().getNome().contains(esseAtor)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
