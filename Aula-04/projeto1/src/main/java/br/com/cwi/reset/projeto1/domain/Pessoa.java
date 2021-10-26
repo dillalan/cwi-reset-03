@@ -1,9 +1,17 @@
 package br.com.cwi.reset.projeto1.domain;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
 
+@Entity
+@Table(name = "pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pessoa {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String nome;
     private LocalDate dataNascimento;
@@ -35,5 +43,13 @@ public abstract class Pessoa {
 
     private Integer calcularIdade() {
         return Period.between(LocalDate.now(), dataNascimento).getYears();
+    }
+
+    public Pessoa(){
+
+    }
+
+    public Integer getId() {
+        return id;
     }
 }

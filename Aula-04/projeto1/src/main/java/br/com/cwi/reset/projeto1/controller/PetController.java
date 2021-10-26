@@ -19,30 +19,37 @@ public class PetController {
     @Autowired
     private PetService petService;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Pet> getPet() {
-        return petService.listarPets();
+    public List<Pet> ListarPets() {
+        return petService.findAll();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{nome}")
     public Pet buscarPetPeloNome(@PathVariable String nome) throws PetNaoEncontradoException {
-        return petService.buscarPetPeloNome(nome);
+        if (petService.findByNome(nome) == null){
+            throw new PetNaoEncontradoException("Pet não encontrado com o nome "+nome);
+        }
+        return petService.findByNome(nome);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Pet cadastrarPet(@RequestBody Pet pet) throws PetDuplicadoException {
-        return petService.cadastrarPet(pet);
+        return petService.savePet(pet);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping
     public Pet atualizarPet(@RequestBody Pet pet) throws PetNaoEncontradoException {
-        return petService.atualizarPet(pet);
+        return petService.atualizar(pet);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{nome}")
     public void deletarPet(@PathVariable String nome) throws PetNaoEncontradoException {
-        petService.deletarPet(nome);
+        petService.deletePet(petService.findByNome(nome));
     }
 
 }

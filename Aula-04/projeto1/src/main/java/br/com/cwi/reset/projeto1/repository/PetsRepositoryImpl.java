@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+//@Repository
 public class PetsRepositoryImpl implements PetsRepository{
     private static List<Pet> petRepository = new ArrayList<>();
 

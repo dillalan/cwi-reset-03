@@ -1,9 +1,19 @@
 package br.com.cwi.reset.projeto1.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "pet")
 public class Pet {
 
-    private String nome;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String nome = "";
     private Integer idade;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private Especie especie;
 
     public String getNome() {
@@ -28,5 +38,9 @@ public class Pet {
 
     public void setEspecie(Especie especie) {
         this.especie = especie;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
