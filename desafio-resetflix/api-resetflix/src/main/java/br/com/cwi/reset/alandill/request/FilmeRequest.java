@@ -5,7 +5,6 @@ import br.com.cwi.reset.alandill.domain.Genero;
 import java.util.List;
 
 public class FilmeRequest {
-    private Integer idFilme;
     private String nome;
     private Integer anoLancamento;
     private String capaFilme;
@@ -24,10 +23,6 @@ public class FilmeRequest {
         this.idEstudio = idEstudio;
         this.resumo = resumo;
         this.personagens = personagens;
-    }
-
-    public Integer getIdFilme() {
-        return idFilme;
     }
 
     public String getNome() {

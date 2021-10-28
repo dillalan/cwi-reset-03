@@ -1,10 +1,10 @@
 package br.com.cwi.reset.alandill.controller;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
 import br.com.cwi.reset.alandill.domain.Diretor;
 import br.com.cwi.reset.alandill.exception.*;
 import br.com.cwi.reset.alandill.request.DiretorRequest;
 import br.com.cwi.reset.alandill.service.DiretorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +15,9 @@ import java.util.List;
 @RestController
 public class DiretorController {
 
+    @Autowired
     private DiretorService diretorService;
 
-    public DiretorController(){
-        this.diretorService = new DiretorService(FakeDatabase.getInstance());
-    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

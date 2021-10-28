@@ -1,12 +1,13 @@
 package br.com.cwi.reset.alandill.controller;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
 import br.com.cwi.reset.alandill.domain.Filme;
 import br.com.cwi.reset.alandill.exception.NaoEncontradoException;
 import br.com.cwi.reset.alandill.exception.NomeException;
 import br.com.cwi.reset.alandill.exception.ObrigatorioException;
+import br.com.cwi.reset.alandill.exception.SemCadastroException;
 import br.com.cwi.reset.alandill.request.FilmeRequest;
 import br.com.cwi.reset.alandill.service.FilmeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +17,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/filmes")
 public class FilmeController {
+
+    @Autowired
     private FilmeService filmeService;
 
-    public FilmeController() {
-        this.filmeService = new FilmeService(FakeDatabase.getInstance());
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarFilme(@RequestBody FilmeRequest filmeRequest) throws ObrigatorioException, NaoEncontradoException, NomeException {
+    public void criarFilme(@RequestBody FilmeRequest filmeRequest) throws ObrigatorioException, NaoEncontradoException, NomeException, SemCadastroException {
         filmeService.criarFilme(filmeRequest);
     }
 

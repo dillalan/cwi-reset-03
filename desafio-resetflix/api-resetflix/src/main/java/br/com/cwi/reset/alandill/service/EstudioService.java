@@ -1,42 +1,40 @@
 package br.com.cwi.reset.alandill.service;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
-import br.com.cwi.reset.alandill.domain.Diretor;
 import br.com.cwi.reset.alandill.domain.Estudio;
 import br.com.cwi.reset.alandill.exception.*;
+import br.com.cwi.reset.alandill.repository.EstudioRepository;
 import br.com.cwi.reset.alandill.request.EstudioRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class EstudioService {
 
-    private FakeDatabase fakeDatabase;
-    private Integer incremento = 1;
-
-    public EstudioService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-    }
+    @Autowired
+    private EstudioRepository estudioRepository;
 
     public void criarEstudio(EstudioRequest estudioRequest) throws TemporalException, ObrigatorioException, NomeException {
         validaInput(estudioRequest);
-        estudioRequest.setId(this.incremento);
-        this.fakeDatabase.persisteEstudio(estudioRequest);
-        ++this.incremento;
+        Estudio estudio = new Estudio(estudioRequest.getNome(),estudioRequest.getDescricao(),
+                estudioRequest.getDataCriacao(),estudioRequest.getStatusAtividade());
+        estudioRepository.save(estudio);
     }
 
     public List<Estudio> consultarEstudios(String filtroNome) throws NaoEncontradoException, SemCadastroException {
-        if (this.fakeDatabase.recuperaEstudios().isEmpty()){
+        if (estudioRepository.findAll().isEmpty()){
             throw new SemCadastroException("Nenhum estúdio cadastrado, favor cadastrar estúdio.");
         }
         List<Estudio> estudioConsultado = new ArrayList<>();
         boolean flag = false;
         if (filtroNome == null) {
-            return this.fakeDatabase.recuperaEstudios();
+            return estudioRepository.findAll();
         } else {
             for (Estudio estudio :
-                    this.fakeDatabase.recuperaEstudios()) {
+                    estudioRepository.findAll()) {
                 if (estudio.getNome().equalsIgnoreCase(filtroNome)) {
                     estudioConsultado.add(estudio);
                     flag = true;
@@ -54,13 +52,13 @@ public class EstudioService {
     public Estudio consultarEstudio(Integer id) throws ObrigatorioException, NaoEncontradoException, SemCadastroException {
         if (id == null) {
             throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {id}.");
-        } else if (this.fakeDatabase.recuperaEstudios().isEmpty()){
+        } else if (estudioRepository.findAll().isEmpty()){
             throw new SemCadastroException("Nenhum estúdio cadastrado, favor cadastrar estúdio.");
         }
         boolean flag = false;
         Estudio estudioConsultado = null;
         for (Estudio estudio :
-                this.fakeDatabase.recuperaEstudios()) {
+                estudioRepository.findAll()) {
             if (estudio.getId() == id) {
                 estudioConsultado = estudio;
                 flag = true;
@@ -87,7 +85,7 @@ public class EstudioService {
         }
 
         for (Estudio estudio :
-                this.fakeDatabase.recuperaEstudios()) {
+                estudioRepository.findAll()) {
             if (estudio.getNome().equals(estudioRequest.getNome())) {
                 throw new NomeException("Já existe um diretor cadastrado para o nome {" + estudioRequest.getNome() + "}.");
             }

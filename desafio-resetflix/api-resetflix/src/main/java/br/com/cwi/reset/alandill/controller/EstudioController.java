@@ -1,10 +1,10 @@
 package br.com.cwi.reset.alandill.controller;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
 import br.com.cwi.reset.alandill.domain.Estudio;
 import br.com.cwi.reset.alandill.exception.*;
 import br.com.cwi.reset.alandill.request.EstudioRequest;
 import br.com.cwi.reset.alandill.service.EstudioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +14,10 @@ import java.util.List;
 @RequestMapping("/estudios")
 @RestController
 public class EstudioController {
+
+    @Autowired
     private EstudioService estudioService;
 
-    public EstudioController(){
-        this.estudioService = new EstudioService(FakeDatabase.getInstance());
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,34 +1,47 @@
 package br.com.cwi.reset.alandill.service;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
-import br.com.cwi.reset.alandill.domain.*;
+import br.com.cwi.reset.alandill.domain.Diretor;
+import br.com.cwi.reset.alandill.domain.Estudio;
+import br.com.cwi.reset.alandill.domain.Filme;
+import br.com.cwi.reset.alandill.domain.PersonagemAtor;
 import br.com.cwi.reset.alandill.exception.NaoEncontradoException;
 import br.com.cwi.reset.alandill.exception.NomeException;
 import br.com.cwi.reset.alandill.exception.ObrigatorioException;
+import br.com.cwi.reset.alandill.exception.SemCadastroException;
+import br.com.cwi.reset.alandill.repository.AtorRepository;
+import br.com.cwi.reset.alandill.repository.DiretorRepository;
+import br.com.cwi.reset.alandill.repository.EstudioRepository;
+import br.com.cwi.reset.alandill.repository.FilmeRepository;
 import br.com.cwi.reset.alandill.request.FilmeRequest;
 import br.com.cwi.reset.alandill.request.PersonagemRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class FilmeService {
-    private FakeDatabase fakeDatabase;
-    private DiretorService diretorService;
-    private AtorService atorService;
 
+    @Autowired
+    private FilmeRepository filmeRepository;
+    @Autowired
+    private EstudioRepository estudioRepository;
+    @Autowired
+    private DiretorRepository diretorRepository;
+    @Autowired
+    private AtorRepository atorRepository;
 
-    public FilmeService(FakeDatabase fakeDatabase) {
-        this.diretorService = new DiretorService(FakeDatabase.getInstance());
-        this.atorService = new AtorService(FakeDatabase.getInstance());
-        this.fakeDatabase = fakeDatabase;
-    }
-
-    public void criarFilme(FilmeRequest filmeRequest) throws ObrigatorioException, NomeException, NaoEncontradoException {
+    public void criarFilme(FilmeRequest filmeRequest) throws ObrigatorioException, NomeException, NaoEncontradoException, SemCadastroException {
         validaEntrada(filmeRequest);
+
         Filme filme = new Filme(filmeRequest.getNome(), filmeRequest.getAnoLancamento(), filmeRequest.getCapaFilme(),
-                filmeRequest.getGeneros(), diretorService.consultarDiretor(filmeRequest.getIdDiretor()),
-                listarPersonagens(filmeRequest), filmeRequest.getResumo());
-        this.fakeDatabase.persisteFilme(filme);
+                filmeRequest.getGeneros(), diretorRepository.findDiretorById(filmeRequest.getIdDiretor()),
+                listarPersonagens(filmeRequest), filmeRequest.getResumo(),
+                estudioRepository.findEstudioById(filmeRequest.getIdEstudio()));
+        filmeRepository.save(filme);
     }
 
     public List<Filme> consultarFilmes(String nomeFilme, String nomeDiretor, String nomePersonagem, String nomeAtor) throws NaoEncontradoException {
@@ -44,7 +57,7 @@ public class FilmeService {
         // Filtrando pelo título do filme
         if(nomeFilme!=null){
             for (Filme filme:
-                 this.fakeDatabase.recuperaFilmes()) {
+                 filmeRepository.findAll()) {
                 if (filme.getNome().contains(nomeFilme)){
                     filtroTitulo.add(filme);
                     filmesEncontrados.add(filtroTitulo);
@@ -57,7 +70,7 @@ public class FilmeService {
         // Filtrando pelo Diretor
         if (nomeDiretor!=null){
             for (Filme filme:
-                    this.fakeDatabase.recuperaFilmes()) {
+                    filmeRepository.findAll()) {
                 if (filme.getDiretor().getNome().contains(nomeDiretor)){
                     filtroDiretor.add(filme);
                     filmesEncontrados.add(filtroDiretor);
@@ -69,7 +82,7 @@ public class FilmeService {
         // Filtrando por personagem
         if (nomePersonagem!=null){
             for (Filme filme :
-                    this.fakeDatabase.recuperaFilmes()) {
+                    filmeRepository.findAll()) {
                 if (contemPersonagem(filme.getPersonagens(), nomePersonagem)){
                     filtroPersonagem.add(filme);
                     filmesEncontrados.add(filtroPersonagem);
@@ -81,7 +94,7 @@ public class FilmeService {
         // Filtrando por Ator
         if (nomeAtor!=null){
             for (Filme filme:
-                 this.fakeDatabase.recuperaFilmes()) {
+                 filmeRepository.findAll()) {
                 if (contemAtor(filme.getPersonagens(), nomeAtor)){
                     filtroAtor.add(filme);
                     filmesEncontrados.add(filtroAtor);
@@ -127,7 +140,7 @@ public class FilmeService {
         boolean flag = false;
 
         for (Estudio estudio :
-            this.fakeDatabase.recuperaEstudios()){
+                estudioRepository.findAll()){
             if (estudio.getId()==filmeRequest.getIdEstudio()){
                 flag = true;
                 break;
@@ -138,7 +151,7 @@ public class FilmeService {
         }
 
         for (Diretor diretor:
-             this.fakeDatabase.recuperaDiretores()) {
+                diretorRepository.findAll()) {
             if (diretor.getId() == filmeRequest.getIdDiretor()) {
                 flag = true;
                 break;
@@ -162,7 +175,7 @@ public class FilmeService {
         List<PersonagemAtor> personagensListados = new ArrayList<>();
         for (PersonagemRequest personagem:
                 filmeRequest.getPersonagens()) {
-            personagensListados.add(new PersonagemAtor(atorService.consultarAtor(personagem.getIdAtor()),
+            personagensListados.add(new PersonagemAtor(atorRepository.findAtorById(personagem.getIdAtor()),
                     personagem.getNomePersonagem(), personagem.getDescricaoPersonagem(), personagem.getTipoAtuacao()));
         }
         return personagensListados;

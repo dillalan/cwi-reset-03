@@ -1,11 +1,11 @@
 package br.com.cwi.reset.alandill.controller;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
 import br.com.cwi.reset.alandill.domain.Ator;
 import br.com.cwi.reset.alandill.exception.*;
 import br.com.cwi.reset.alandill.request.AtorRequest;
 import br.com.cwi.reset.alandill.response.AtorEmAtividade;
 import br.com.cwi.reset.alandill.service.AtorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +16,8 @@ import java.util.List;
 @RestController
 public class AtorController {
 
+    @Autowired
     private AtorService atorService;
-
-    public AtorController() {
-        this.atorService = new AtorService(FakeDatabase.getInstance());
-    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

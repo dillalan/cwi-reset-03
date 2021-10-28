@@ -1,12 +1,19 @@
 package br.com.cwi.reset.alandill.domain;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
 public class Estudio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+
     String nome;
     String descricao;
     LocalDate dataCriacao;
+    @Enumerated(EnumType.STRING)
     StatusAtividade statusAtividade;
 
     public Estudio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
@@ -16,8 +23,8 @@ public class Estudio {
         this.statusAtividade = statusAtividade;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Estudio() {
+
     }
 
     public Integer getId() {
@@ -38,5 +45,25 @@ public class Estudio {
 
     public StatusAtividade getStatusAtividade() {
         return statusAtividade;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public void setStatusAtividade(StatusAtividade statusAtividade) {
+        this.statusAtividade = statusAtividade;
     }
 }

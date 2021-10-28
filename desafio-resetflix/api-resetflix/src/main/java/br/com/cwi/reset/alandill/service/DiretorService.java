@@ -1,29 +1,21 @@
 package br.com.cwi.reset.alandill.service;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
 import br.com.cwi.reset.alandill.domain.Diretor;
 import br.com.cwi.reset.alandill.exception.*;
+import br.com.cwi.reset.alandill.repository.DiretorRepository;
 import br.com.cwi.reset.alandill.request.DiretorRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class DiretorService {
-    private FakeDatabase fakeDatabase;
-    private Integer incremento = 1;
 
-    public DiretorService(FakeDatabase fakeDatabase) {
-        this.fakeDatabase = fakeDatabase;
-    }
-
-    public Integer getIncremento() {
-        return incremento;
-    }
-
-    public void setIncremento() {
-        this.incremento += 1;
-    }
+    @Autowired
+    private DiretorRepository diretorRepository;
 
     public void cadastrarDiretor(DiretorRequest diretorRequest) throws NomeException, TemporalException, ObrigatorioException {
         if (diretorRequest.getNome().isEmpty()) {
@@ -37,31 +29,30 @@ public class DiretorService {
             throw new TemporalException("Ano de início de atividade inválido para o diretor cadastrado.");
         }
         for (Diretor diretor :
-                this.fakeDatabase.recuperaDiretores()) {
+                diretorRepository.findAll()) {
             if (diretor.getNome().equals(diretorRequest.getNome())) {
                 throw new NomeException("Já existe um diretor cadastrado para o nome {" + diretorRequest.getNome() + "}.");
             }
         }
-        diretorRequest.setId(getIncremento());
-        this.fakeDatabase.persisteDiretor(diretorRequest);
-        setIncremento();
+        Diretor diretor = new Diretor(diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
+        diretorRepository.save(diretor);
     }
 
-    public List<Diretor> listarDiretores(String filtroNome) throws SemCadastroException, NaoEncontradoException {
+    public List<Diretor> listarDiretores(String nome) throws SemCadastroException, NaoEncontradoException {
 
         List<Diretor> diretorFiltrado = new ArrayList<>();
 
-        if (this.fakeDatabase.recuperaDiretores().isEmpty()) {
+        if (diretorRepository.findAll().isEmpty()) {
             throw new SemCadastroException("Nenhum diretor cadastrado, favor cadastrar diretores.");
-        } else if (filtroNome == null) {
-            return this.fakeDatabase.recuperaDiretores();
+        } else if (nome == null) {
+            return diretorRepository.findAll();
         } else {
-            String stringDoFiltro = filtroNome.toLowerCase();
+            String stringDoFiltro = nome.toLowerCase();
             String stringDaDatabase;
             boolean flag = false;
 
             for (Diretor diretor :
-                    this.fakeDatabase.recuperaDiretores()) {
+                    diretorRepository.findAll()) {
                 stringDaDatabase = diretor.getNome().toLowerCase();
                 if (stringDaDatabase.contains(stringDoFiltro)) {
                     diretorFiltrado.add(diretor);
@@ -69,7 +60,7 @@ public class DiretorService {
                 }
             }
             if (!flag) {
-                throw new NaoEncontradoException("Diretor não encontrado com o filtro {" + filtroNome + "}, favor informar " +
+                throw new NaoEncontradoException("Diretor não encontrado com o filtro {" + nome + "}, favor informar " +
                         "outro filtro.");
             }
         }
@@ -84,7 +75,7 @@ public class DiretorService {
             throw new ObrigatorioException("Campo obrigatório não informado. Favor informar o campo {Integer id}.");
         }
         for (Diretor diretor :
-                this.fakeDatabase.recuperaDiretores()) {
+                diretorRepository.findAll()) {
             if (diretor.getId() == id) {
                 diretorConsultado = diretor;
                 flag = true;

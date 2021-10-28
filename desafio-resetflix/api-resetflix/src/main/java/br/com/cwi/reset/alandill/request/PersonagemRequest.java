@@ -1,13 +1,9 @@
 package br.com.cwi.reset.alandill.request;
 
-import br.com.cwi.reset.alandill.FakeDatabase;
-import br.com.cwi.reset.alandill.domain.Ator;
-import br.com.cwi.reset.alandill.domain.PersonagemAtor;
 import br.com.cwi.reset.alandill.domain.TipoAtuacao;
 
 public class PersonagemRequest{
 
-    private Integer idPersonagem;
     private Integer idAtor;
     private String nomePersonagem;
     private String descricaoPersonagem;
